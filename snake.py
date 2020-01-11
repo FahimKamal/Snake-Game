@@ -8,7 +8,7 @@ import time
 import random
 
 
-delay = 0.1
+delay = 0.05
 # Setup the Screen
 window = turtle.Screen()
 window.title('Snake Game by Fahim Kamal')
@@ -25,13 +25,16 @@ snake_head.penup()
 snake_head.goto(0, 0)
 snake_head.direction = 'stop'
 
+# Snake Body segment
+snake_body_segment = []
+
 # Snake Food
 snake_food = turtle.Turtle()
 snake_food.speed(0)
 snake_food.shape('circle')
 snake_food.color('red')
 snake_food.penup()
-snake_food.goto(0, 0)
+snake_food.goto(0, 100)
 
 # Functions
 def go_up():
@@ -68,12 +71,34 @@ window.onkeypress(go_left, key= 'Left')
 while True:
     window.update()
     # distance() function calculates the distance of two turtles
+    # Check for a collision with the food
     if snake_head.distance(snake_food) < 20:
         # Move the food to a random location
         x = random.randint(-290, 290)
         y = random.randint(-290, 290)
         snake_food.goto(x, y)
 
+        # Create a segment for the the body
+        new_body_part = turtle.Turtle()
+        new_body_part.speed(0)
+        new_body_part.shape('circle')
+        new_body_part.color('grey')
+        new_body_part.penup()
+        snake_body_segment.append(new_body_part)
+
+    # Move the last segment first in reverse order
+    for index in range(len(snake_body_segment) - 1, 0, -1):
+        # Get the x and y coordinate of the segment that is before the current segment
+        x = snake_body_segment[index-1].xcor()
+        y = snake_body_segment[index-1].ycor()
+        # And move to that location
+        snake_body_segment[index].goto(x, y)
+
+    # Move the body_segment to where the head was
+    if len(snake_body_segment):
+        x = snake_head.xcor()
+        y = snake_head.ycor()
+        snake_body_segment[0].goto(x, y)
     move()
     # the sleep() functions delays given amount of time to execute
     time.sleep(delay)
