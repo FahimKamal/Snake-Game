@@ -7,7 +7,7 @@ import turtle
 import time
 import random
 
-delay = 0.1
+delay = 0.02
 # Setup the Screen
 window = turtle.Screen()
 window.title('Snake Game by Fahim Kamal')
@@ -120,10 +120,10 @@ while True:
     # Check for collision with the border
     if snake_head.ycor() < -290 or snake_head.ycor() > 290 or snake_head.xcor() < -290 or snake_head.xcor() > 290:
         die()
+        delay = 0.02
         # Reset the score
         score = 0
         show_score()
-
 
     # distance() function calculates the distance of two turtles
     # Check for a collision with the food
@@ -132,7 +132,8 @@ while True:
         x = random.randint(-280, 280)
         y = random.randint(-280, 280)
         snake_food.goto(x, y)
-        delay -= 0.002
+        # Decrease the delay time
+        delay /= 2
 
         # Increase the score
         score += 10
@@ -163,6 +164,7 @@ while True:
     for segment in snake_body_segment:
         if segment.distance(snake_head) < 20:
             die()
+            delay = 0.02
             # Reset the score
             score = 0
             show_score()
